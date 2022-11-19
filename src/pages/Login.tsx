@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { LoginCheckDto } from "../types/Auth";
+import crypto from 'crypto-js'
 
 const defaultFormData: LoginCheckDto = {
     userId: '',
@@ -11,7 +12,6 @@ export const Login = () => {
     const [formData, setFormData] = useState(defaultFormData);
 
     useEffect(() => {
-      console.log('login page 들어왔슈');
     }, [])
 
     const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>, field: string) => {
@@ -23,12 +23,12 @@ export const Login = () => {
       const onSubmit = useCallback(
         (e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
-          console.log('onSubmit hi');
+          // password 암호화, secret key 설정
+          formData.password = crypto.AES.encrypt(formData.password, 'secret key').toString();
           axios.post<LoginCheckDto>('http://test.com', formData)
                .then((response) => {
                 console.log(response);
                })
-
         },
         [formData],
       );
